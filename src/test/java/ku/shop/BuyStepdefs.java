@@ -5,6 +5,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BuyStepdefs {
 
@@ -31,6 +32,19 @@ public class BuyStepdefs {
     @Then("total should be {float}")
     public void total_should_be(double total) {
         assertEquals(total, order.getTotal());
+    }
+
+    @When("I buy {string} with quantity {int} which exceeds stock")
+    public void i_buy_with_quantity_exceeds_stock(String name, int quantity) {
+        Product prod = catalog.getProduct(name);
+        // ทดสอบว่าเกิด exception ขึ้นหรือไม่
+        assertThrows(OutOfStockException.class, () -> order.addItem(prod, quantity));
+    }
+
+    @Then("I should see an OutOfStockException")
+    public void i_should_see_an_out_of_stock_exception() {
+        // ไม่ต้องทำอะไรที่นี่
+        // เพราะการทดสอบ `assertThrows` ได้เกิดขึ้นใน `@When` แล้ว
     }
 }
 
